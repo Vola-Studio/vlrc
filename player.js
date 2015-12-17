@@ -24,15 +24,22 @@ document.addEventListener('dragover', stopEvent)
 document.addEventListener('drop', function(e){
 	stopEvent(e)
 	
-	var file = e.dataTransfer.files[0];
-	if(file.type.match(/audio*/)){
-		URL.revokeObjectURL(vlrc.src)
-		vlrc.player.src = vlrc.src = URL.createObjectURL(file)
-		
-		vlrc.name.text(file.name)
-		updateTime()
-		vlrc.button.pause.click()
-	}
+	;[].forEach.call(e.dataTransfer.files, function (file){
+		var reader = new FileReader()
+		if(file.type.match(/audio*/)){
+			URL.revokeObjectURL(vlrc.src)
+			vlrc.player.src = vlrc.src = URL.createObjectURL(file)
+			
+			vlrc.name.text(file.name)
+			updateTime()
+			vlrc.button.pause.click()
+		} else {
+			reader.readAsText(file)
+			reader.onloadend = function (res){
+				$('#raw-lrc').val(res.currentTarget.result)
+			}
+		}
+	})
 })
 
 /* Button Logic */
@@ -87,11 +94,11 @@ $("#editor-tab").click(function () {
 })
 // Regexp Match => Lrc{min, sec, ms, timed, text}
 function Lrc(match){
-	this.min = parseInt(match[2])
-	this.sec = parseInt(match[3])
-	this.ms = parseInt(match[5])
-	this.timed = this.minutes !== undefined 
+	this.min = parseInt(match[2]) || 0
+	this.sec = parseInt(match[3]) || 0
+	this.ms = parseInt(match[5]) || 0
 	this.text = match[6]
+	this.rawTime = this.min * 60 + this.sec + this.ms / 100
 }
 
 // *Float => {min, sec, ms}
@@ -137,15 +144,17 @@ $("#preview-tab").click(function (){
 	var t = $('#lrc-preview tbody')
 	t.html('')
 	
+	function getNextTime(index){
+		return index == vlrc.lrc.length ? vlrc.player.duration : vlrc.lrc[index += 1].rawTime || getNextTime(index)
+	}	
 	vlrc.lrc.forEach(function (lrc, index){
-		var time = lrc.min * 60 + lrc.sec + lrc.ms / 100
-		try {
-			var next = vlrc.lrc[index += 1]
-			var nextTime = next.min * 60 + next.sec + next.ms / 100
-		} catch(e){
-			var nextTime = vlrc.player.duration
-		}
-		$('<tr data-start="' + time + '" data-dur="' + (nextTime - time) +'"><td>' + lrc.text + '</td></tr>').appendTo(t).click(function (){
+		var time = lrc.rawTime
+		var next = getNextTime(index)
+		var dur = next - time
+		if(dur < 0) dur = 0
+		console.log(time, next)
+
+		$('<tr data-start="' + time + '" data-dur="' + (lrc.text ? dur : 0) +'"><td>' + lrc.text + '</td></tr>').appendTo(t).click(function (){
 			vlrc.player.currentTime = parseFloat($(this).attr('data-start'))
 		})
 	})
@@ -155,7 +164,7 @@ function previewUpdater(t){
 		var dom = $(this)
 		var start = parseFloat(dom.attr('data-start'))
 		var dur = parseFloat(dom.attr('data-dur'))
-		if(t >= start && t <= start + dur) dom.addClass('active')
+		if(t > start && t < start + dur) dom.addClass('active')
 		else dom.removeClass('active')
 	})
 }
