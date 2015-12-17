@@ -69,7 +69,7 @@ function updateTime(){
 }
 function startProgress(){
 	vlrc.progress.bar = $('#progress .progressbar')
-	vlrc.progress.intervalId = setInterval(updateTime, 0)
+	vlrc.progress.intervalId = setInterval(updateTime, 0.01)
 }
 
 /* Editor Logic */
@@ -152,9 +152,8 @@ $("#preview-tab").click(function (){
 		var next = getNextTime(index)
 		var dur = next - time
 		if(dur < 0) dur = 0
-		console.log(time, next)
 
-		$('<tr data-start="' + time + '" data-dur="' + (lrc.text ? dur : 0) +'"><td>' + lrc.text + '</td></tr>').appendTo(t).click(function (){
+		$('<tr data-start="' + time + '" data-dur="' + (lrc.text ? dur : 0) +'" id="id-' + index +'"><td>' + lrc.text + '</td></tr>').appendTo(t).click(function (){
 			vlrc.player.currentTime = parseFloat($(this).attr('data-start'))
 		})
 	})
@@ -164,7 +163,10 @@ function previewUpdater(t){
 		var dom = $(this)
 		var start = parseFloat(dom.attr('data-start'))
 		var dur = parseFloat(dom.attr('data-dur'))
-		if(t > start && t < start + dur) dom.addClass('active')
+		if(t > start && t < start + dur){
+			dom.addClass('active')
+			if(location.hash != '#' + dom.attr('id')) location.href = '#' + dom.attr('id')
+		}
 		else dom.removeClass('active')
 	})
 }
