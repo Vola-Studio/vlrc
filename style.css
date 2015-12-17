@@ -1,0 +1,48 @@
+* {
+	font-family: "Noto Sans CJK SC", "Microsoft Yahei", sans-serif;
+}
+.mdl-navigation > h6 {
+	padding-left: 24px;
+}
+
+#console-pause {
+	display: none;
+}
+#console {
+	text-align: center;
+}
+#console button {
+	font-size: 22px;
+}
+#progress {
+	width: 100%;
+	position: fixed;
+	z-index: 11;
+}
+
+.panel {
+	padding: 1em;
+}
+.panel > * {
+	width: 100%;
+}
+
+#lrc-editor td {
+	text-align: left;
+	font-size: 18px;
+}
+#lrc-preview td {
+	text-align: center;
+	font-size: 18px;
+	transition: all 0.2s;
+}
+
+#raw-lrc {
+	min-height: 500px;
+	font-size: 16px;
+}
+
+.active {
+	background: black;
+	color: white;
+}

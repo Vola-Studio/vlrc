@@ -1,0 +1,62 @@
+<!doctype>
+<html>
+	<head>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+		<link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.teal-red.min.css" />
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	
+	<body>
+		<audio id="player"></audio>
+		<div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
+			<div id="progress" class="mdl-progress mdl-js-progress is-upgraded"></div>
+			<div class="mdl-layout__drawer">
+				<span class="mdl-layout-title">vLRC</span>
+				<nav class="mdl-navigation">
+					<h6>播放器 / Player</h6>
+					<a onclick="outSource()" class="mdl-navigation__link">Music from web / 外链</a>
+					
+					<h6>进度 / Progress</h6>
+					<div id="console">
+						<button id="console-back" class="mdl-button mdl-js-button mdl-js-ripple-effect"><i class="material-icons">&#xE020;</i></button>
+						<button id="console-play" class="mdl-button mdl-js-button mdl-js-ripple-effect"><i class="material-icons">&#xE037;</i></button>
+						<button id="console-pause" class="mdl-button mdl-js-button mdl-js-ripple-effect"><i class="material-icons">&#xE034;</i></button>
+						<button id="console-go" class="mdl-button mdl-js-button mdl-js-ripple-effect"><i class="material-icons">&#xE01F;</i></button>
+						<div id="console-song-name">Drag music in</div>
+						<div id="console-song-time">
+							<span id="console-currentTime">Now</span> / <span id="console-duration">All</span>
+						</div>
+					</div>
+				</nav>
+			</div>
+			<main class="mdl-layout__content">
+				<div class="page-content">
+					<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+						<div class="mdl-tabs__tab-bar">
+							<a id="raw-tab" href="#raw-panel" class="mdl-tabs__tab is-active">文本 / Raw</a>
+							<a id="editor-tab" href="#editor-panel" class="mdl-tabs__tab">编辑 / Editor</a>
+							<a id="preview-tab" href="#Preview-panel" class="mdl-tabs__tab">预览 / Preview</a>
+						</div>
+						<div id="raw-panel" class="mdl-tabs__panel is-active panel">
+							<textarea id="raw-lrc" contenteditable>
+[00:00.00]Paste raw text here / 复制文本到此处
+[00:02.00]And Drag music in this page / 拖动音乐到此页面
+[00:42]Then click lyric in editor / 在编辑选项卡中点击歌词
+[00:50]No blank row / 不留空行
+							</textarea>
+						</div>
+						<div id="editor-panel" class="mdl-tabs__panel panel">
+							<table id="lrc-editor" class="mdl-data-table mdl-shadow--2dp"><tbody></tbody></table>
+						</div>
+						<div id="preview-panel" class="mdl-tabs__panel panel">
+							<table id="lrc-preview" class="mdl-data-table mdl-shadow--2dp"><tbody></tbody></table>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+		<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script src="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
+		<script src="player.js"></script>
+	</body>
+</html>
